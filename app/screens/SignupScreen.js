@@ -12,7 +12,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import * as Animation from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import {useDispatch} from 'react-redux';
 import {SIGNUP} from '../actions';
 
@@ -27,8 +27,20 @@ const LoginScreen = ({navigation}) => {
     confirmPassword: '',
   });
 
-  const handleSignUp = () => {
-    dispatch(SIGNUP(details.email, details.password));
+  const handleSignUp = async () => {
+    //check validity
+    //api calls goes here...
+    //register new user
+    //get back token
+    //catch erros
+    let token = null;
+    token = 'mycreatedtokenfake';
+    try {
+      await AsyncStorage.setItem('userToken', token);
+    } catch (err) {
+      console.log(err);
+    }
+    dispatch(SIGNUP(details.email, token));
   };
 
   const handleEmailChange = (val) => {

@@ -3,3 +3,4 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const REGISTER = 'REGISTER';
 export const TOGGLE_DARK_THEME = 'TOGGLE_DARK_THEME';
+export const SEARCHBAR_VISIBLE = 'SEARCHBAR_VISIBLE';

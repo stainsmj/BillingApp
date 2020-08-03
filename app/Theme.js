@@ -13,6 +13,8 @@ export const DarkTheme = {
   colors: {
     ...NavigationDarkTheme.colors,
     ...PaperDarkTheme.colors,
+    card: '#009387',
+    text: '#fff',
   },
 };
 export const DefaultTheme = {
@@ -21,5 +23,9 @@ export const DefaultTheme = {
   colors: {
     ...NavigationDefaultTheme.colors,
     ...PaperDefaultTheme.colors,
+    card: '#009387',
+    text: '#05375a',
   },
 };
+
+console.log(DarkTheme);
