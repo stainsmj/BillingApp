@@ -1,4 +1,5 @@
 import React, {useState, useContext} from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import {
   Text,
   View,
@@ -6,6 +7,7 @@ import {
   Platform,
   TextInput,
   StatusBar,
+  Alert,
 } from 'react-native';
 import FontAwsome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -13,9 +15,11 @@ import * as Animation from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-import {AuthContext} from '../components/context';
-
+import {useDispatch} from 'react-redux';
+import {SIGNIN} from '../actions';
 const LoginScreen = ({navigation}) => {
+  const dispatch = useDispatch();
+
   const [usernameValid, setusernameValid] = useState(true);
   const [passwordValid, setPasswordValid] = useState(true);
   const [datahidden, setdatahidden] = useState(true);
@@ -24,7 +28,34 @@ const LoginScreen = ({navigation}) => {
     password: '',
   });
 
-  const {signIn} = useContext(AuthContext);
+  const handleSignin = async () => {
+    const {email, password} = details;
+    //check validity
+    //api call
+    //get back token
+    //catch errors
+    let token = null;
+    if (email === 'stains' && password === 'abcd') {
+      token = 'mycreatedtokenfake';
+      try {
+        await AsyncStorage.setItem('userToken', token);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      if (email.length === 0 || password.length === 0) {
+        Alert.alert('Field Empty', 'All the fields must be filled!', [
+          {text: 'Okey'},
+        ]);
+      } else {
+        Alert.alert('Invalid User', 'Username or password not correct!', [
+          {text: 'Okey'},
+        ]);
+      }
+    }
+    dispatch(SIGNIN(email, token));
+  };
+
   const handleEmailChange = (val) => {
     setDetails((preDetails) => ({
       ...preDetails,
@@ -121,8 +152,7 @@ const LoginScreen = ({navigation}) => {
             </Animation.Text>
           )}
           <View style={styles.button}>
-            <TouchableOpacity
-              onPress={() => signIn(details.email, details.password)}>
+            <TouchableOpacity onPress={handleSignin}>
               <LinearGradient
                 colors={['#08d4c4', '#01ab9d']}
                 style={styles.signIn}>

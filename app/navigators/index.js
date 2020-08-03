@@ -1,8 +1,10 @@
-import React, {useEffect, useMemo, useReducer} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import React, {useEffect} from 'react';
 import {View, Alert} from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
+import {createStackNavigator} from '@react-navigation/stack';
+import {useSelector, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+
 //screens
 import HomeNavigator from './Home';
 import EditScreen from '../screens/EditScreen';
@@ -10,146 +12,39 @@ import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import SplashScreen from '../screens/SplashScreen';
-//context
-import {AuthContext} from '../components/context';
+
+import {RETRIEVE_TOKEN} from '../actions';
 
 const Stack = createStackNavigator();
 
-const Navigation = () => {
-  const initialState = {
-    isLoading: true,
-    userToken: null,
-    userName: null,
-  };
-
-  const loginReducer = (state, action) => {
-    switch (action.type) {
-      case 'RETRIEVE_TOKEN':
-        return {
-          ...state,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case 'LOGIN':
-        return {
-          ...state,
-          userToken: action.token,
-          userName: action.id,
-          isLoading: false,
-        };
-      case 'LOGOUT':
-        return {
-          ...state,
-          userToken: null,
-          userName: null,
-          isLoading: false,
-        };
-      case 'REGISTER':
-        return {
-          ...state,
-          userToken: action.token,
-          userName: action.id,
-          isLoading: false,
-        };
-      default:
-        return {...state};
-    }
-  };
-
-  const [loginState, dispatch] = useReducer(loginReducer, initialState);
-
-  const authContext = useMemo(
-    () => ({
-      signIn: async (username, password) => {
-        //check validity
-        //api call
-        //get back token
-        //catch errors
-        let token = null;
-        if (username === 'stains' && password === 'abcd') {
-          token = 'mycreatedtokenfake';
-          try {
-            await AsyncStorage.setItem('userToken', token);
-          } catch (err) {
-            console.log(err);
-          }
-        } else {
-          if (username.length === 0 || password.length === 0) {
-            Alert.alert('Field Empty', 'All the fields must be filled!', [
-              {text: 'Okey'},
-            ]);
-          } else {
-            Alert.alert('Invalid User', 'Username or password not correct!', [
-              {text: 'Okey'},
-            ]);
-          }
-        }
-        dispatch({
-          type: 'LOGIN',
-          id: username,
-          token,
-        });
-      },
-      signOut: async () => {
-        try {
-          await AsyncStorage.removeItem('userToken');
-        } catch (err) {
-          console.log(err);
-        }
-        dispatch({type: 'LOGOUT'});
-      },
-      signUp: async (username, password) => {
-        //check validity
-        //api calls goes here...
-        //register new user
-        //get back token
-        //catch erros
-        let token = null;
-        token = 'mycreatedtokenfake';
-        try {
-          await AsyncStorage.setItem('userToken', token);
-        } catch (err) {
-          console.log(err);
-        }
-
-        dispatch({
-          type: 'REGISTER',
-          id: username,
-          token,
-        });
-      },
-    }),
-    [],
-  );
+export default Navigator = () => {
+  const dispatch = useDispatch();
+  const {isLoading, userToken} = useSelector((state) => state.auth);
 
   useEffect(() => {
-    setTimeout(async () => {
+    const checkToken = async () => {
       let token = null;
       try {
         token = await AsyncStorage.getItem('userToken');
       } catch (err) {
         console.log(err);
       }
-      dispatch({
-        type: 'RETRIEVE_TOKEN',
-        token,
-      });
-    }, 1000);
+      dispatch(RETRIEVE_TOKEN(token));
+      console.log(token);
+    };
+    setTimeout(checkToken, 1000);
   }, []);
-  if (loginState.isLoading)
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  return (
-    <AuthContext.Provider value={authContext}>
-      {loginState.userToken !== null ? <AuthStack /> : <RootStack />}
-    </AuthContext.Provider>
-  );
+
+  if (isLoading) return <ACTIVITY_INDICATOR />;
+  else if (userToken !== null) return <AuthStack />;
+  else return <RootStack />;
 };
 
-export default Navigation;
+const ACTIVITY_INDICATOR = () => (
+  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <ActivityIndicator size="large" />
+  </View>
+);
 
 const RootStack = () => (
   <Stack.Navigator headerMode="none">

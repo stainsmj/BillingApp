@@ -6,13 +6,27 @@ import {AuthContext} from '../components/context';
 //screens
 import HomeScreen from '../screens/HomeScreen';
 import PrintScreen from '../screens/PrintScreen';
+import {useTheme} from 'react-native-paper';
+
+import {useDispatch, useSelector} from 'react-redux';
+import {SIGNOUT, TOGGLE_THEME} from '../actions';
 
 const Tab = createMaterialTopTabNavigator();
 
 const Home = ({navigation}) => {
+  const dispatch = useDispatch();
+  const currentTheme = useTheme();
   const [visible, setVisible] = useState(false);
 
-  const {signOut} = useContext(AuthContext);
+  // const {signOut, toggleTheme} = useContext(AuthContext);
+
+  const signOut = () => {
+    dispatch(SIGNOUT());
+  };
+  const toggleTheme = () => {
+    dispatch(TOGGLE_THEME());
+    console.log();
+  };
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
@@ -40,6 +54,12 @@ const Home = ({navigation}) => {
             closeMenu();
           }}
           title="Edit store"
+        />
+        <Menu.Item
+          onPress={() => {
+            toggleTheme();
+          }}
+          title={currentTheme.dark ? 'Light theme' : 'Dark theme'}
         />
         <Divider />
         <Menu.Item onPress={signOut} title="Logout" />

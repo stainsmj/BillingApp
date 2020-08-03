@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {
-  Button,
   Text,
   View,
   StyleSheet,
@@ -13,9 +12,12 @@ import Feather from 'react-native-vector-icons/Feather';
 import * as Animation from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {AuthContext} from '../components/context';
+
+import {useDispatch} from 'react-redux';
+import {SIGNUP} from '../actions';
 
 const LoginScreen = ({navigation}) => {
+  const dispatch = useDispatch();
   const [datahidden, setdatahidden] = useState(true);
   const [confirmdatahidden, setconfirmdatahidden] = useState(true);
   const [datavalid, setvalid] = useState(false);
@@ -25,7 +27,9 @@ const LoginScreen = ({navigation}) => {
     confirmPassword: '',
   });
 
-  const {signUp} = React.useContext(AuthContext);
+  const handleSignUp = () => {
+    dispatch(SIGNUP(details.email, details.password));
+  };
 
   const handleEmailChange = (val) => {
     setDetails((preDetails) => ({
@@ -138,9 +142,8 @@ const LoginScreen = ({navigation}) => {
           </View>
 
           <View style={styles.button}>
-            <TouchableOpacity onPress={signUp}>
+            <TouchableOpacity onPress={handleSignUp}>
               <LinearGradient
-                onPress={signUp}
                 colors={['#08d4c4', '#01ab9d']}
                 style={styles.signIn}>
                 <Text style={[styles.textSign, {color: '#fff'}]}>Sign Up</Text>
