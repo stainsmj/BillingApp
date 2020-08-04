@@ -5,90 +5,8 @@ import SearchBar from '../components/SearchBar';
 import {useSelector} from 'react-redux';
 import Item from '../components/ListItem';
 
-const DATA = [
-  {
-    title: 'Main dishes',
-    data: [
-      {
-        title: 'Pizza',
-        price: 24,
-        id: 21,
-      },
-      {
-        title: 'Burger',
-        price: 234,
-        id: 22,
-      },
-      {
-        title: 'Risotto',
-        price: 54,
-        id: 23,
-      },
-    ],
-  },
-  {
-    title: 'Main dishes',
-    data: [
-      {
-        title: 'Pizza',
-        price: 24,
-        id: 21,
-      },
-      {
-        title: 'Burger',
-        price: 234,
-        id: 22,
-      },
-      {
-        title: 'Risotto',
-        price: 54,
-        id: 23,
-      },
-    ],
-  },
-  {
-    title: 'Main dishes',
-    data: [
-      {
-        title: 'Pizza',
-        price: 24,
-        id: 21,
-      },
-      {
-        title: 'Burger',
-        price: 234,
-        id: 22,
-      },
-      {
-        title: 'Risotto',
-        price: 54,
-        id: 23,
-      },
-    ],
-  },
-  {
-    title: 'Main dishes',
-    data: [
-      {
-        title: 'Pizza',
-        price: 24,
-        id: 21,
-      },
-      {
-        title: 'Burger',
-        price: 234,
-        id: 22,
-      },
-      {
-        title: 'Risotto',
-        price: 54,
-        id: 23,
-      },
-    ],
-  },
-];
-
 const HomeScreen = ({navigation}) => {
+  const storeItems = useSelector((state) => state.store);
   const SEARCHBAR_VISIBLE = useSelector((state) => state.searchbar);
   console.log(SEARCHBAR_VISIBLE);
   const currentTheme = useTheme();
@@ -102,7 +20,8 @@ const HomeScreen = ({navigation}) => {
       <View>
         <SearchBar visible={SEARCHBAR_VISIBLE} />
         <SectionList
-          sections={DATA}
+          style={{marginBottom: SEARCHBAR_VISIBLE ? 50 : 0}}
+          sections={storeItems}
           keyExtractor={(item, index) => item.id}
           renderItem={({item}) => <Item item={item} color={colors.text} />}
           renderSectionHeader={({section: {title}}) => (
@@ -123,6 +42,8 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 20,
     fontWeight: 'bold',
+    marginLeft: 10,
+    marginTop: 20,
   },
 });
 
