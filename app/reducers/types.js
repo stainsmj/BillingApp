@@ -3,6 +3,7 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const REGISTER = 'REGISTER';
 export const TOGGLE_DARK_THEME = 'TOGGLE_DARK_THEME';
+export const SET_THEME = 'SET_THEME';
 export const SEARCHBAR_VISIBLE = 'SEARCHBAR_VISIBLE';
 
 export const ADD_ITEM = 'ADD_ITEM';

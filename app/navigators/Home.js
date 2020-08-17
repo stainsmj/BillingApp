@@ -4,22 +4,13 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import HomeScreen from '../screens/HomeScreen';
 import PrintScreen from '../screens/PrintScreen';
 import {useTheme} from 'react-native-paper';
-import HeaderRight from '../components/HomeRightOptions';
+import Camera from '../screens/CameraScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
 const Home = ({navigation}) => {
   const currentTheme = useTheme();
   const {colors} = currentTheme;
-
-  navigation.setOptions({
-    headerTintColor: colors.text,
-    headerStyle: {
-      backgroundColor: colors.card,
-      elevation: 0,
-    },
-    headerRight: (props) => <HeaderRight {...props} navigation={navigation} />,
-  });
 
   return (
     <Tab.Navigator
@@ -35,6 +26,7 @@ const Home = ({navigation}) => {
       }}>
       <Tab.Screen name="HomeScreen" component={HomeScreen} />
       <Tab.Screen name="PrintScreen" component={PrintScreen} />
+      <Tab.Screen name="CameraScreen" component={Camera} />
     </Tab.Navigator>
   );
 };

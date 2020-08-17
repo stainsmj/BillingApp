@@ -5,6 +5,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {Menu, Divider} from 'react-native-paper';
 import {useDispatch} from 'react-redux';
 import {SIGNOUT, TOGGLE_THEME, TOGGLE_SEARCH_BAR} from '../actions';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HomeRightOptions = ({navigation}) => {
   const {colors, dark} = useTheme();
@@ -19,7 +20,12 @@ const HomeRightOptions = ({navigation}) => {
     }
     dispatch(SIGNOUT());
   };
-  const toggleTheme = () => {
+  const toggleTheme = async () => {
+    try {
+      await AsyncStorage.setItem('theme', dark ? 'DEFAULT' : 'DARK');
+    } catch (err) {
+      console.log(err);
+    }
     dispatch(TOGGLE_THEME());
   };
   const toggleSearchBar = () => {
