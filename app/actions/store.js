@@ -1,9 +1,8 @@
 import {ADD_ITEM, EDIT_ITEM, DELETE_ITEM} from '../reducers/types';
 
-export const AddItem = (item, section_id) => ({
+export const AddItem = (item) => ({
   type: ADD_ITEM,
   item,
-  section_id,
 });
 
 export const EditItem = (item, section_id) => ({

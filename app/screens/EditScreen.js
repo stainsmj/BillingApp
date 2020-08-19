@@ -1,27 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {
-  ScrollView,
-  View,
-  Text,
-  Alert,
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
-  SectionList,
-} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, SectionList} from 'react-native';
 import {Button} from 'react-native-paper';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-
-import ImagePicker from 'react-native-image-crop-picker';
-
-import {Headline} from 'react-native-paper';
 import ModelContainer from '../components/ModelContainer';
 import NewSection from '../components/AddNewSection';
-import {useSelector} from 'react-redux';
+import NewItem from '../components/AddNewItem';
 import Item from '../components/ListItem';
 import {useTheme} from 'react-native-paper';
-
 //database local
 import {
   insertNewCatagory,
@@ -34,9 +19,8 @@ const EditScreen = ({navigation}) => {
     reloadData();
   }, []);
   const [sections, setSections] = useState();
+  const [currentSection, setCurrentSection] = useState(null);
   const {colors} = useTheme();
-  const storeItems = useSelector((state) => state.store);
-
   const [visible, setVisible] = React.useState(false);
   const [visibleItemModel, setVisibleItemModel] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
@@ -51,31 +35,20 @@ const EditScreen = ({navigation}) => {
   };
 
   const showModal = () => setVisible(true);
-  const showItemModal = () => {
-    const sectionId = 1597655126;
+  const showItemModal = () => setVisibleItemModel(true);
+
+  const addNewItem = (item) => {
     const itemDetails = {
+      ...item,
+      price: +item.price,
       id: Math.floor(Date.now() / 1000),
-      title: 'text',
-      price: 23,
-      image: 'dasdasd',
-      measurementIn: 'kg',
     };
-    insertNewItem(itemDetails, sectionId)
+    insertNewItem(itemDetails, currentSection)
       .then((data) => {
         reloadData();
         console.log(data);
       })
       .catch((err) => console.log('ERR'));
-
-    // setVisibleItemModel(true);
-    // ImagePicker.openCamera({
-    //   width: 200,
-    //   height: 200,
-    //   cropping: true,
-    // }).then((img) => {
-    //   console.log(img);
-    //   setImage(img.path);
-    // });
   };
 
   const hideModal = () => setVisible(false);
@@ -107,7 +80,7 @@ const EditScreen = ({navigation}) => {
                 onChange={reloadData}
               />
             )}
-            renderSectionHeader={({section: {title}}) => (
+            renderSectionHeader={({section: {title, id}}) => (
               <View>
                 <View style={styles.line} />
                 <Text style={[styles.header, {color: colors.text}]}>
@@ -119,7 +92,10 @@ const EditScreen = ({navigation}) => {
                     <AntDesignIcon name="addfile" color={color} size={size} />
                   )}
                   mode="outlined"
-                  onPress={showItemModal}>
+                  onPress={() => {
+                    setCurrentSection(id);
+                    showItemModal();
+                  }}>
                   New Item
                 </Button>
               </View>
@@ -140,7 +116,6 @@ const EditScreen = ({navigation}) => {
             setSaving(true);
             insertNewCatagory(sectionDetails)
               .then((data) => {
-                console.log(data);
                 setSaving(false);
                 hideModal();
                 reloadData();
@@ -151,7 +126,11 @@ const EditScreen = ({navigation}) => {
         />
       </ModelContainer>
       <ModelContainer visible={visibleItemModel} onDismiss={hideItemModal}>
-        <Text>Item model</Text>
+        <NewItem
+          onCancel={hideItemModal}
+          onSave={(item) => addNewItem(item)}
+          Saving={saving}
+        />
       </ModelContainer>
     </SafeAreaView>
   );

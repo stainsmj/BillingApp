@@ -77,6 +77,7 @@ export const insertNewItem = (newItemDetails, sectionId) =>
           CATAGORY_SCHEMA_NAME,
           sectionId,
         );
+        console.log(desiredSection);
         realm.write(() => {
           console.log('WRITING ITEM...');
           desiredSection.data.push(newItemDetails);

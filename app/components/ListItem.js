@@ -13,10 +13,11 @@ const ListItem = (props) => {
     color,
     editable,
     onChange,
+    onPress,
   } = props;
   const {colors} = useTheme();
   return (
-    <TouchableRipple onPress={() => alert('' + title)}>
+    <TouchableRipple onPress={() => onPress(props.item)}>
       <View style={styles.itemContainer}>
         <View style={styles.item}>
           <Avatar.Image
